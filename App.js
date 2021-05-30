@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, SafeAreaView, FlatList, StatusBar } from 'react-native';
 import CardQuote from './components/card/card.component';
+import { themeKalango,themeOriginal} from './utils/colors';
 
 const notList = [
   { id: 1, task: 'Suco de gratidão + clorofila', background: 'https://image.freepik.com/free-vector/flat-night-sky-background_23-2148032671.jpg'},
@@ -14,7 +15,7 @@ export default function App() {
     <SafeAreaView style={styles.container}>
       <StatusBar
         animated={true}
-        backgroundColor="#c64242"
+        backgroundColor = {themeKalango.button}
        />
       <FlatList
         data={notList}
@@ -26,8 +27,6 @@ export default function App() {
         }>
       </FlatList>       
       <CardQuote />
-
-
     </SafeAreaView>
   );
 }
@@ -35,7 +34,7 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#EBF5F7',
+    backgroundColor: themeKalango.backgraund,
     alignItems: 'center',
     justifyContent: 'center',
   },
