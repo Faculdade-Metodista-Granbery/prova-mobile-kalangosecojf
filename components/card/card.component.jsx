@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { StyleSheet, View } from 'react-native';
 import { Card, Paragraph, Button, ProgressBar, ThemeProvider } from 'react-native-paper';
 import { themeKalango,themeOriginal} from '../../utils/colors';
+import { Stopwatch } from 'react-native-stopwatch-timer';
 
 const styles = StyleSheet.create({
     card: {
@@ -23,22 +24,36 @@ const styles = StyleSheet.create({
 const CardQuote = ({task,background}) => {
     //Theme Original
     //const [nameTheme, setNameTheme] = useState(null);
+
     //Theme Kalango
     const [nameTheme, setNameTheme] = useState("kalango");
+
     
     const [buttonPlay, setButtonPlay] = useState("play");
     const [progressBar, setProgressBar] = useState(null);
-    
 
-    const handlePlay = () => {
-        setButtonPlay("play")
-        setProgressBar(0)
+    const [startStopwatch, setStartStopwatch] = useState(false);
+    const [resetStopwatch, setResetStopwatch] = useState(false);
 
-        if(buttonPlay === "play"){
-            setButtonPlay("pause")
-            setProgressBar(1)
-        }
+    const [timeProgressBar, setTimeProgressBar] = useState(0);
+
+    if (timeProgressBar==5){
+        Vibration.vibrate()
     }
+    
+    const handlePlay = () => {
+        if(buttonPlay === "play"){
+            setButtonPlay("pause");
+            setProgressBar(1);
+            setStartStopwatch(!startStopwatch);
+            setResetStopwatch(false);
+        }
+        else{
+            setButtonPlay("play");
+            setProgressBar(0);
+            setStartStopwatch(false);
+        }
+    }   
 
     return (
         <Card style={styles.card}
@@ -47,7 +62,8 @@ const CardQuote = ({task,background}) => {
             <Card.Cover
                 style={styles.cover}
                 resizeMode={`cover`}
-                source={{ uri: background }} />
+                source={{ uri: background }} 
+            />
             <Card.Content style={styles.content}
                 backgroundColor={nameTheme ? themeKalango.button : themeOriginal.button}
             >             
@@ -61,13 +77,31 @@ const CardQuote = ({task,background}) => {
                 </Card.Actions>
                 <Paragraph>{task}</Paragraph>                   
             </Card.Content>   
-            <View style={{ height: 15, backgroundColor: nameTheme ? themeKalango.backgroundCard : themeOriginal.backgroundCard}}>
+            <View style={{ height: 20, 
+                backgroundColor: nameTheme ? themeKalango.backgroundCard : themeOriginal.backgroundCard}
+            }>
                 <ProgressBar
-                    progress={progressBar}
-                    color={nameTheme ? themeKalango.progressBar : themeOriginal.progressBar} 
-                    style={{ height: 5}}>
-                </ProgressBar>
-            </View>                             
+                        progress={progressBar}
+                        color={nameTheme ? themeKalango.progressBar : themeOriginal.progressBar} 
+                        style={{ height: 10}}>
+                </ProgressBar>                       
+                <Stopwatch 
+                    start={startStopwatch}
+                    reset={resetStopwatch}
+                    getTime={(time) => {
+                        if(time > '00:00:05:00'){
+                            setStartStopwatch(false);
+                            setResetStopwatch(true);
+                            setButtonPlay("play");
+                        }; 
+                        let tempo = time.split(':');
+                        let data = new Date('00','00','0000',tempo[0],tempo[1],tempo[2],tempo[3]);
+                        let segundos = data.getSeconds()
+                        setTimeProgressBar(segundos)
+                        } 
+                    }
+                />
+            </View>  
         </Card>
     )
 }

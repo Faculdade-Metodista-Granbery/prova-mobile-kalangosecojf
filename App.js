@@ -17,6 +17,7 @@ export default function App() {
 
   console.log(cards)
 
+
   return (
   
     <SafeAreaView style={nameTheme ? styles.containerKalango : styles.containerOriginal}
