@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, SafeAreaView, FlatList, StatusBar } from 'react-native';
 import CardQuote from './components/card/card.component';
 import { themeKalango,themeOriginal } from './utils/colors';
@@ -8,29 +8,24 @@ import { useList } from 'react-firebase-hooks/database';
 
 export default function App() {
 
+  //Theme Original
+  //const [nameTheme, setNameTheme] = useState(null);  
+  //Theme Kalango
+  const [nameTheme, setNameTheme] = useState("kalango");
+
   const [cards, load, error] = useList (firebase.getAll())
 
   console.log(cards)
 
   return (
-
-    <SafeAreaView style={styles.container}>
+  
+    <SafeAreaView style={nameTheme ? styles.containerKalango : styles.containerOriginal}
+      >
       <StatusBar
         animated={true}
-        backgroundColor = {themeKalango.button}
+        backgroundColor = {nameTheme ? themeKalango.button : themeOriginal.button}
        />
       <FlatList
-      /**
-        data={notList}
-        keyExtractor={item=>item.id}
-        renderItem={({item}) =>
-          <CardQuote key={item.id}
-            task={item.task}
-            background={item.background}
-          />
-          }
-          */
-        /**/
         data={cards}
         keyExtractor={item=>item.id}
         renderItem={({item}) =>
@@ -40,7 +35,6 @@ export default function App() {
             background={item.val().background}
           />
           }
-        /**/
        >
       </FlatList>      
     </SafeAreaView>
@@ -48,10 +42,17 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  container: {
+  containerOriginal: {
+    flex: 1,
+    backgroundColor: themeOriginal.backgraund,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  containerKalango: {
     flex: 1,
     backgroundColor: themeKalango.backgraund,
     alignItems: 'center',
     justifyContent: 'center',
   }
+
 });
